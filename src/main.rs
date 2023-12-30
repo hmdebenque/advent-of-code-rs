@@ -1,7 +1,9 @@
-use std::{char, future::IntoFuture, fmt::format};
+use clap::Parser;
 use error_chain::error_chain;
-use std::io::Read;
-use std::env;
+use reqwest::ClientBuilder;
+use std::time::Duration;
+
+mod solutions;
 
 error_chain! {
     foreign_links {
@@ -10,60 +12,56 @@ error_chain! {
     }
 }
 
-fn main() {
-    let day = 1;
-    let authentCookie = format!("session={}", env::var("AOC_COOKIE").unwrap());
-    download_input(authentCookie, day);
+#[derive(Parser, Debug)]
+#[command(author, version, about)]
+/// Learn Rust through AOC
+struct Args {
+    #[clap(short, long)]
+    /// AOC authentication
+    auth: String,
+
+    #[clap(short, long)]
+    /// Day to solve
+    day: u8,
+
+    #[clap(short, long)]
+    verbosity: Option<usize>,
 }
 
-fn download_input(authCookie: String, day: i32) -> Result<()> {
+#[tokio::main]
+async fn main() -> std::result::Result<(), Error> {
+    log::info!("Initilization");
+    env_logger::init();
+    let args = Args::parse();
+    log::info!("Starting AOC app with parameters {:?}", args);
+
+    let day = args.day;
+    let input = download_input(args.auth, day).await?;
+
+    let day1_result = solutions::day1::day1(&input);
+    log::info!("Result day 1 = {}", day1_result);
+
+    let day1_result_2 = solutions::day1::day1_2(&input);
+    log::info!("Result day 1 part 2 = {}", day1_result_2);
+
+    return Ok(());
+}
+
+const TIMEOUT: Duration = Duration::from_secs(2);
+
+async fn download_input(auth_cookie: String, day: u8) -> Result<String> {
     let url = format!("https://adventofcode.com/2023/day/{}/input", day);
-    let mut body = String::new();
-    let mut res = reqwest::blocking::get(url)?;
-    res.read_to_string(&mut body)?;
 
-    println!("response: {}", body);
-    return Result::Ok(());
-}
+    let client = ClientBuilder::new().timeout(TIMEOUT).build().unwrap();
 
-fn day1(input: &[& str]) -> Vec<u32> {
-    let mut result = Vec::new();
-    for coord in input {
-        result.push(extract_coordinates(&coord))
-    }
-    result
-}
+    let request = client
+        .get(url)
+        .header("Cookie", format!("session={auth}", auth = auth_cookie));
+    log::info!("Sending resquest {:?}", request);
+    let res = request.send().await?;
 
-fn extract_coordinates(input: &str) -> u32 {
-    let mut first_digit: u32 = 0;
-    let mut last_digit: u32 = 0;
-    let mut first_found = false;
-    for character in input.chars() {
-        if character.is_numeric() {
-            if !first_found {
-                first_found = true;
-                first_digit = character.to_digit(10).unwrap();
-            }
-            last_digit = character.to_digit(10).unwrap();
-        }
-    }
+    let body = res.text().await?;
 
-    return first_digit * 10 + last_digit;
-}
-
-
-#[cfg(test)]
-mod tests {
-
-    use super::*;
-
-    #[test]
-    fn test_day1() {
-        let input = &["1abc2", "pqr3stu8vwx", "a1b2c3d4e5f", "treb7uchet"];
-
-        let result = day1(input);
-
-        assert_eq!(vec![12, 38, 15, 77], result);
-    }
-
+    log::info!("response: {}", body);
+    return Result::Ok(body);
 }
