@@ -1,7 +1,11 @@
+use std::time::Duration;
+
 use clap::Parser;
 use error_chain::error_chain;
 use reqwest::ClientBuilder;
-use std::time::Duration;
+
+use crate::solutions::day1::{day1, day1_2};
+use crate::solutions::day2::{day2, day2_2};
 
 mod solutions;
 
@@ -30,7 +34,7 @@ struct Args {
 
 #[tokio::main]
 async fn main() -> std::result::Result<(), Error> {
-    log::info!("Initilization");
+    log::info!("Initialization");
     env_logger::init();
     let args = Args::parse();
     log::info!("Starting AOC app with parameters {:?}", args);
@@ -38,16 +42,20 @@ async fn main() -> std::result::Result<(), Error> {
     let day = args.day;
     let input = download_input(args.auth, day).await?;
 
-    let day1_result = solutions::day1::day1(&input);
-    log::info!("Result day 1 = {}", day1_result);
+    let (part1, part2) = match args.day {
+        1 => (day1(&input), day1_2(&input)),
+        2 => (day2(&input), day2_2(&input)),
+        other => {
+            return Err(Error::from(format!("Cannot handle day {other}")));
+        }
+    };
 
-    let day1_result_2 = solutions::day1::day1_2(&input);
-    log::info!("Result day 1 part 2 = {}", day1_result_2);
-
-    return Ok(());
+    log::info!("Result for day {} part 1 = {}", args.day, part1);
+    log::info!("Result for day {} part 2 = {}", args.day, part2);
+    Ok(())
 }
 
-const TIMEOUT: Duration = Duration::from_secs(2);
+const TIMEOUT: Duration = Duration::from_secs(10);
 
 async fn download_input(auth_cookie: String, day: u8) -> Result<String> {
     let url = format!("https://adventofcode.com/2023/day/{}/input", day);
@@ -63,5 +71,5 @@ async fn download_input(auth_cookie: String, day: u8) -> Result<String> {
     let body = res.text().await?;
 
     log::info!("response: {}", body);
-    return Result::Ok(body);
+    return Ok(body);
 }
