@@ -6,6 +6,7 @@ use reqwest::ClientBuilder;
 
 use crate::solutions::day1::{day1, day1_2};
 use crate::solutions::day2::{day2, day2_2};
+use crate::solutions::day3::{day3, day3_2};
 
 mod solutions;
 
@@ -45,6 +46,7 @@ async fn main() -> std::result::Result<(), Error> {
     let (part1, part2) = match args.day {
         1 => (day1(&input), day1_2(&input)),
         2 => (day2(&input), day2_2(&input)),
+        3 => (day3(&input), day3_2(&input)),
         other => {
             return Err(Error::from(format!("Cannot handle day {other}")));
         }
