@@ -8,13 +8,9 @@ pub fn day1(input: &String) -> String {
         log::info!("day1 intermediate result: {in} => {out}", in=coord, out=extracted);
     }
     log::info!("Day 1 intermediate result: {:?}", result);
-    let fold = result
-        .iter()
-        .sum::<u16>()
-        .to_string();
+    let fold = result.iter().sum::<u16>().to_string();
     return fold;
 }
-
 
 pub fn day1_2(input: &String) -> String {
     let mut result = Vec::new();
@@ -24,13 +20,9 @@ pub fn day1_2(input: &String) -> String {
         log::info!("day1 intermediate result: {in} => {out}", in=coord, out=extracted);
     }
     log::info!("Day 1 intermediate result: {:?}", result);
-    let fold = result
-        .iter()
-        .sum::<u16>()
-        .to_string();
+    let fold = result.iter().sum::<u16>().to_string();
     return fold;
 }
-
 
 fn extract_coord_digits(input: &str) -> u16 {
     let mut first_digit: u16 = 0;
@@ -49,13 +41,23 @@ fn extract_coord_digits(input: &str) -> u16 {
 }
 
 const STR_TO_NUM: &[&str; 10] = &[
-    r#"zero$"#, r#"one$"#, r#"two$"#, r#"three$"#, r#"four$"#, r#"five$"#, r#"six$"#, r#"seven$"#, r#"eight$"#, r#"nine$"#];
+    r#"zero$"#,
+    r#"one$"#,
+    r#"two$"#,
+    r#"three$"#,
+    r#"four$"#,
+    r#"five$"#,
+    r#"six$"#,
+    r#"seven$"#,
+    r#"eight$"#,
+    r#"nine$"#,
+];
 
 fn extract_coord_str(input: &str) -> u16 {
     let mut first_digit: u16 = 0;
     let mut last_digit: u16 = 0;
     let mut first_found = false;
-    let mut text_found= String::new();
+    let mut text_found = String::new();
 
     for character in input.chars() {
         if character.is_numeric() {
@@ -107,13 +109,14 @@ mod tests {
     #[test]
     fn test_day1_2() {
         let input = String::from(
-"two1nine
+            "two1nine
 eightwothree
 abcone2threexyz
 xtwone3four
 4nineeightseven2
 zoneight234
-7pqrstsixteen");
+7pqrstsixteen",
+        );
 
         let result = day1_2(&input);
 
@@ -132,7 +135,10 @@ zoneight234
         assert_eq!(66, super::extract_coord_str("stsixte"));
         // case overlapping number strings
         assert_eq!(28, super::extract_coord_str("2fiveshtds4oneightsj"));
-        assert_eq!(22, super::extract_coord_str("qxtbbtwo7jrdgxlcpxbczxhnpjthreetwogcfl"));
+        assert_eq!(
+            22,
+            super::extract_coord_str("qxtbbtwo7jrdgxlcpxbczxhnpjthreetwogcfl")
+        );
     }
 
     #[test]
@@ -142,5 +148,4 @@ zoneight234
         assert!(pattern.is_match("kjdshgfqilucregliuhel"));
         assert!(!pattern.is_match("kjdshgfqilucregliu"));
     }
-
 }
