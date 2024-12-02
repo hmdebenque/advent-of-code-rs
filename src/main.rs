@@ -1,10 +1,14 @@
+use std::process::exit;
 use std::time::Duration;
 
 use clap::Parser;
+use env_logger::Builder;
 use error_chain::error_chain;
+use log::LevelFilter;
 use reqwest::ClientBuilder;
 
 mod aoc_2023;
+mod aoc_2024;
 
 error_chain! {
     foreign_links {
@@ -38,10 +42,10 @@ async fn main() -> std::result::Result<(), Error> {
     log::info!("Initialization");
     env_logger::init();
     let args = Args::parse();
-    log::info!("Starting AOC app with parameters {:?}", args);
+    log::warn!("Starting AOC app with parameters {:?}", args);
 
     let day = args.day;
-    let input = download_input(args.auth, day).await?;
+    let input = download_input(args.auth, args.year, day).await?;
 
     if args.year == 2023 {
         let (part1, part2) = match args.day {
@@ -56,10 +60,13 @@ async fn main() -> std::result::Result<(), Error> {
         log::info!("Result for day {} part 2 = {}", args.day, part2);
     } else if args.year == 2024 {
         let (part1, part2) = match args.day {
+            1 => (aoc_2024::day1::day1(&input), aoc_2024::day1::day1_2(&input)),
             other => {
                 return Err(Error::from(format!("Cannot handle day {other}")));
             }
         };
+        log::info!("Result 2024 for day {} part 1 = {}", args.day, part1);
+        log::info!("Result 2024 for day {} part 2 = {}", args.day, part2);
     }
 
     Ok(())
@@ -67,8 +74,8 @@ async fn main() -> std::result::Result<(), Error> {
 
 const TIMEOUT: Duration = Duration::from_secs(10);
 
-async fn download_input(auth_cookie: String, day: u8) -> Result<String> {
-    let url = format!("https://adventofcode.com/2023/day/{}/input", day);
+async fn download_input(auth_cookie: String, year: u16, day: u8) -> Result<String> {
+    let url = format!("https://adventofcode.com/{}/day/{}/input", year, day);
 
     let client = ClientBuilder::new().timeout(TIMEOUT).build().unwrap();
 
