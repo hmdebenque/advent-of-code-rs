@@ -66,7 +66,6 @@ impl<T> MarkedValue<T> {
 }
 
 pub fn day3(input: &String) -> String {
-    let mut cur_line = String::new();
     let mut cur_num = String::new();
     let mut numbers = Vec::new();
     let mut numbers_coords_index: HashMap<Coordinate, usize> = HashMap::new();
@@ -97,7 +96,6 @@ pub fn day3(input: &String) -> String {
         if char == '\n' {
             line += 1;
             column = 0;
-            cur_line = String::new();
         } else {
             if !(char == '.') && !char.is_numeric() {
                 // This a symbol ! We need to check locations
@@ -121,7 +119,7 @@ pub fn day3(input: &String) -> String {
             if loc.is_some() {
                 let val_opt = numbers.get_mut(*loc.unwrap());
                 if val_opt.is_some() {
-                    let mut val = val_opt.unwrap();
+                    let val = val_opt.unwrap();
                     if !val.is_marked() {
                         coord_to_use.push(val.value);
                         val.mark();
@@ -140,7 +138,6 @@ pub fn day3(input: &String) -> String {
 
 pub fn day3_2(input: &String) -> String {
     // Dirty copy paste, I know and am sorry
-    let mut cur_line = String::new();
     let mut cur_num = String::new();
     let mut numbers = Vec::new();
     let mut numbers_coords_index: HashMap<Coordinate, usize> = HashMap::new();
@@ -171,7 +168,6 @@ pub fn day3_2(input: &String) -> String {
         if char == '\n' {
             line += 1;
             column = 0;
-            cur_line = String::new();
         } else {
             if !(char == '.') && !char.is_numeric() {
                 // This a symbol ! We need to check locations

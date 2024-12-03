@@ -1,4 +1,3 @@
-use clap::builder::TypedValueParser;
 use regex::{Captures, Regex};
 use std::fmt::Debug;
 
@@ -8,22 +7,6 @@ pub fn day3(input: &String) -> String {
         parser.push(char);
     }
     parser.sum_results().to_string()
-}
-
-trait Operation: Debug {
-    fn compute(&self) -> usize;
-}
-
-#[derive(Debug)]
-struct Multiplication {
-    left: usize,
-    right: usize,
-}
-
-impl Operation for Multiplication {
-    fn compute(&self) -> usize {
-        self.left * self.right
-    }
 }
 
 #[derive(Debug)]
@@ -41,10 +24,6 @@ struct OperationBuilder {
 }
 
 impl OperationBuilder {
-    fn clear(&mut self) {
-        self.chars.clear();
-    }
-
     fn matches(&self, input: &str) -> bool {
         self.build_regexp.is_match(input)
     }
@@ -88,7 +67,7 @@ fn new_mul_builder() -> OperationBuilder {
         build_regexp,
         match_regexp,
         chars: String::new(),
-        parser: |captures: Captures| {
+        parser: |captures| {
             OperationType::MULTIPLY(captures[1].parse().unwrap(), captures[2].parse().unwrap())
         },
     }
@@ -101,7 +80,7 @@ fn new_do_builder() -> OperationBuilder {
         build_regexp,
         match_regexp,
         chars: String::new(),
-        parser: |captures: Captures| OperationType::DO,
+        parser: |_captures| OperationType::DO,
     }
 }
 
@@ -112,7 +91,7 @@ fn new_dont_builder() -> OperationBuilder {
         build_regexp,
         match_regexp,
         chars: String::new(),
-        parser: |captures: Captures| OperationType::DO,
+        parser: |_captures| OperationType::DONT,
     }
 }
 
@@ -182,8 +161,9 @@ mod tests {
 
     #[test]
     fn test_day3_2() {
-        let input =
-            String::from("xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))");
+        let input = String::from(
+            "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))",
+        );
 
         let result = day3(&input);
 

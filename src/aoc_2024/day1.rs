@@ -57,21 +57,4 @@ mod tests {
 
         assert_eq!(String::from("11"), result);
     }
-
-    #[test]
-    fn test_day1_2() {
-        let input = String::from(
-            "two1nine
-eightwothree
-abcone2threexyz
-xtwone3four
-4nineeightseven2
-zoneight234
-7pqrstsixteen",
-        );
-
-        let result = day1_2(&input);
-
-        assert_eq!(String::from("281"), result);
-    }
 }
