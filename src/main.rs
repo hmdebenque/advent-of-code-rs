@@ -1,10 +1,7 @@
-use std::process::exit;
 use std::time::Duration;
 
 use clap::Parser;
-use env_logger::Builder;
 use error_chain::error_chain;
-use log::LevelFilter;
 use reqwest::ClientBuilder;
 
 mod aoc_2023;
@@ -61,6 +58,7 @@ async fn main() -> std::result::Result<(), Error> {
     } else if args.year == 2024 {
         let (part1, part2) = match args.day {
             1 => (aoc_2024::day1::day1(&input), aoc_2024::day1::day1_2(&input)),
+            3 => (aoc_2024::day3::day3(&input), aoc_2024::day3::day3(&input)),
             other => {
                 return Err(Error::from(format!("Cannot handle day {other}")));
             }
