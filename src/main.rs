@@ -86,5 +86,5 @@ async fn download_input(auth_cookie: String, year: u16, day: u8) -> Result<Strin
     let body = res.text().await?;
 
     log::info!("response: {}", body);
-    return Ok(body);
+    Ok(body)
 }

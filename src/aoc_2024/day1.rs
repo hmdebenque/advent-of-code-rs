@@ -12,8 +12,12 @@ pub fn day1(input: &String) -> String {
     sum.to_string()
 }
 
-pub fn day1_2(_input: &String) -> String {
-    String::from("not yet implemented")
+pub fn day1_2(input: &String) -> String {
+    let (left, right) = parse_input(input);
+    left.iter()
+        .map(|l| right.iter().filter(|v: &&usize| *v == l).count() * l)
+        .sum::<usize>()
+        .to_string()
 }
 
 fn parse_input(input: &str) -> (Vec<usize>, Vec<usize>) {
@@ -56,5 +60,21 @@ mod tests {
         let result = day1(&input);
 
         assert_eq!(String::from("11"), result);
+    }
+
+    #[test]
+    fn test_day1_2() {
+        let input = String::from(
+            "3   4
+4   3
+2   5
+1   3
+3   9
+3   3",
+        );
+
+        let result = day1_2(&input);
+
+        assert_eq!(String::from("31"), result);
     }
 }
