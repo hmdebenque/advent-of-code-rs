@@ -6,7 +6,7 @@ use strum_macros::EnumIter;
 pub fn day4(input: &String) -> String {
     let matrix = CharMatrix::parse(input);
     println!("Matrix parsed:\n{:?}", matrix);
-    matrix.search_text("XMAS").to_string()
+    matrix.search_text().to_string()
 }
 
 #[derive(Debug)]
@@ -98,7 +98,7 @@ impl CharMatrix {
         self
     }
 
-    fn search_text(&self, text: &str) -> usize {
+    fn search_text(&self) -> usize {
         let central_char = 'A';
         let search_direct = String::from("MAS");
         let search_reversed = String::from("SAM");
