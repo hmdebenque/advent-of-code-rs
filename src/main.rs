@@ -60,6 +60,7 @@ async fn main() -> std::result::Result<(), Error> {
             1 => (aoc_2024::day1::day1(&input), aoc_2024::day1::day1_2(&input)),
             2 => (aoc_2024::day2::day2(&input), aoc_2024::day2::day2_2(&input)),
             3 => (aoc_2024::day3::day3(&input), aoc_2024::day3::day3(&input)),
+            4 => (aoc_2024::day4::day4(&input), aoc_2024::day4::day4(&input)),
             other => {
                 return Err(Error::from(format!("Cannot handle day {other}")));
             }
