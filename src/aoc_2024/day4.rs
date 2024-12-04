@@ -1,3 +1,4 @@
+use crate::aoc_2024::day4::Direction::{NorthEast, SouthEast};
 use std::fmt::Debug;
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
@@ -98,26 +99,37 @@ impl CharMatrix {
     }
 
     fn search_text(&self, text: &str) -> usize {
-        let first_char = text.chars().next().unwrap();
-        let text_len = text.len();
+        let central_char = 'A';
+        let search_direct = String::from("MAS");
+        let search_reversed = String::from("SAM");
+
+        let text_len = 3;
         let mut total_matchs = 0;
-        for ordinate in 0..self.matrix.len() {
-            for abscissa in 0..self.matrix[ordinate].len() {
+        for ordinate in 1..(self.matrix.len() - 1) {
+            for abscissa in 1..(self.matrix[ordinate].len() - 1) {
                 let char = self.matrix[ordinate][abscissa];
-                if char == first_char {
+                if char == central_char {
                     println!("Found char at {},{}", ordinate, abscissa);
 
-                    let matching_text_count = Direction::iter()
-                        .map(|direction| {
-                            self.read_text(
-                                &Coordinates::new(abscissa as isize, ordinate as isize),
-                                &direction,
-                                text_len,
-                            )
-                        })
-                        .filter(|s| text == s)
-                        .count();
-                    total_matchs += matching_text_count;
+                    // first diagonal
+                    let south_east = self.read_text(
+                        &Coordinates::new((abscissa - 1) as isize, (ordinate - 1) as isize),
+                        &SouthEast,
+                        text_len,
+                    );
+                    // second diagonal
+                    let north_east = self.read_text(
+                        &Coordinates::new((abscissa - 1) as isize, (ordinate + 1) as isize),
+                        &NorthEast,
+                        text_len,
+                    );
+                    let x_mas_present = (south_east == search_direct
+                        || south_east == search_reversed)
+                        && (north_east == search_direct || north_east == search_reversed);
+                    // println!("south_east={}, north_east={}, result={}",south_east, north_east, x_mas_present);
+                    if x_mas_present {
+                        total_matchs += 1;
+                    }
                 }
             }
         }
@@ -130,13 +142,11 @@ impl CharMatrix {
         let search_bounds = self.get_bounds();
         for _i in 0..len {
             if !search_bounds.in_bound(&read_loc) {
-                println!("Read location out of boud: {:?}", read_loc);
                 break;
             }
             buffer.push(self.read_value(&read_loc));
             read_loc = dir.advance(&read_loc);
         }
-        println!("From {:?} with len {}, read: {}", start, len, buffer);
         buffer
     }
 
@@ -175,5 +185,26 @@ MXMXAXMASX",
         let result = day4(&input);
 
         assert_eq!(String::from("18"), result);
+    }
+
+    #[test]
+    fn test_day3_2() {
+        let input = String::from(
+            ".M.S......
+..A..MSMS.
+.M.S.MAA..
+..A.ASMSM.
+.M.S.M....
+..........
+S.S.S.S.S.
+.A.A.A.A..
+M.M.M.M.M.
+..........
+",
+        );
+
+        let result = day4(&input);
+
+        assert_eq!(String::from("9"), result);
     }
 }
