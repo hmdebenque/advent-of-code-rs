@@ -7,11 +7,18 @@ authors = ["hmdebenque"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-clap = { version = "4.4.11", features = ["derive"] }
-env_logger = "0.10.1"
+clap = { version = "4.5.22", features = ["derive"] }
+env_logger = "0.11.5"
 error-chain = "0.12.4"
-log = "0.4.20"
-regex = "1.10.2"
-reqwest = { version = "0.11.23", features = ["blocking"] }
-tokio = { version = "1.35.1", features = ["macros"] }
-test-log = "0.2.14"
+log = "0.4.22"
+regex = "1.11.1"
+reqwest = { version = "0.12.9", features = ["blocking"] }
+tokio = { version = "1.42.0", features = ["macros", "rt-multi-thread"] }
+test-log = "0.2.16"
+strum = "0.26.3"
+strum_macros = "0.26.4"
+
+
+# diff ruby/java c'est pratique mais pas pour les frontends
+# => prevoir aussi du typescript
+# sur une heure faire 50/50 theorie puis pratique
