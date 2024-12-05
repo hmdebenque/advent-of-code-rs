@@ -12,11 +12,17 @@ pub fn day5(input: &String) -> String {
 }
 
 pub fn day5_2(input: &String) -> String {
-    let (rules, updates) = parse_input(input);
+    let (rules, mut updates) = parse_input(input);
     updates
-        .iter()
-        .filter(|update: &&Update| rules.matches(update))
-        // .map(|update: &mut Update| rules.correct(update))
+        .iter_mut()
+        .filter(|update: &&mut Update| !rules.matches(update))
+        .map(|update: &mut Update| {
+            println!("Attempting correction!");
+            while !rules.matches(update) {
+                rules.correct(update);
+            }
+            update
+        })
         .map(|update| update.get_center_pages())
         .sum::<usize>()
         .to_string()
@@ -78,7 +84,7 @@ impl Matches for Rule {
             || index_after.is_none()
             || index_before.unwrap() < index_after.unwrap();
         if !is_ok {
-            println!("Update {:?} do not pass rule {:?}!", update, &self)
+            println!("{:?} does not pass rule {:?}!", update, &self)
         }
         is_ok
     }
@@ -96,14 +102,19 @@ impl Rule {
 
 impl Correct for Rule {
     fn correct(&self, update: &mut Update) -> bool {
-        if !self.matches(update) {
+        if !self.matches(&update) {
             // try correction
-            let to_go_left_index = self.last_left_element_index(update).unwrap();
-            let to_go_right_index = self.first_right_element_index(update).unwrap();
+            println!(
+                "Attempting correction for real on {:?} with rule {:?}!",
+                update, self
+            );
+            let to_go_left_index = self.last_left_element_index(&update).unwrap();
+            let to_go_right_index = self.first_right_element_index(&update).unwrap();
             let to_go_left = update.pages[to_go_left_index];
             let to_go_right = update.pages[to_go_right_index];
             update.pages[to_go_right_index] = to_go_left;
             update.pages[to_go_left_index] = to_go_right;
+            println!("corrected to {:?}", update);
             return true;
         }
         false
@@ -112,7 +123,10 @@ impl Correct for Rule {
 
 impl Correct for Vec<Rule> {
     fn correct(&self, update: &mut Update) -> bool {
-        self.iter().all(|rule| rule.correct(update))
+        self.iter().for_each(|r| {
+            r.correct(update);
+        });
+        true
     }
 }
 
@@ -188,8 +202,7 @@ mod tests {
     #[test]
     fn test_day5_2() {
         let input = String::from(PUZZLE_INPUT);
-
-        let result = day5(&input);
+        let result = day5_2(&input);
 
         assert_eq!(String::from("123"), result);
     }

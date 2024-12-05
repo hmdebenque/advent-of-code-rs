@@ -1,6 +1,5 @@
 use crate::aoc_2024::day4::Direction::{NorthEast, SouthEast};
 use std::fmt::Debug;
-use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
 pub fn day4(input: &String) -> String {
