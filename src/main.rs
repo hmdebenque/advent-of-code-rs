@@ -61,6 +61,7 @@ async fn main() -> std::result::Result<(), Error> {
             2 => (aoc_2024::day2::day2(&input), aoc_2024::day2::day2_2(&input)),
             3 => (aoc_2024::day3::day3(&input), aoc_2024::day3::day3(&input)),
             4 => (aoc_2024::day4::day4(&input), aoc_2024::day4::day4(&input)),
+            5 => (aoc_2024::day5::day5(&input), aoc_2024::day5::day5(&input)),
             other => {
                 return Err(Error::from(format!("Cannot handle day {other}")));
             }
@@ -82,7 +83,7 @@ async fn download_input(auth_cookie: String, year: u16, day: u8) -> Result<Strin
     let request = client
         .get(url)
         .header("Cookie", format!("session={auth}", auth = auth_cookie));
-    log::info!("Sending resquest {:?}", request);
+    log::info!("Sending request {:?}", request);
     let res = request.send().await?;
 
     let body = res.text().await?;
