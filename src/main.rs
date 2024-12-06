@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use clap::Parser;
 use error_chain::error_chain;
@@ -62,6 +62,10 @@ async fn main() -> std::result::Result<(), Error> {
             3 => (aoc_2024::day3::day3(&input), aoc_2024::day3::day3(&input)),
             4 => (aoc_2024::day4::day4(&input), aoc_2024::day4::day4(&input)),
             5 => (aoc_2024::day5::day5(&input), aoc_2024::day5::day5_2(&input)),
+            6 => (
+                with_timer("day 6 part 1", &|| aoc_2024::day6::day6(&input)),
+                with_timer("day 6 part 1", &|| aoc_2024::day6::day6_2(&input)),
+            ),
             other => {
                 return Err(Error::from(format!("Cannot handle day {other}")));
             }
@@ -90,4 +94,11 @@ async fn download_input(auth_cookie: String, year: u16, day: u8) -> Result<Strin
 
     log::info!("response: {}", body);
     Ok(body)
+}
+
+fn with_timer<T>(name: &str, function: &dyn Fn() -> T) -> T {
+    let now = Instant::now();
+    let result = function();
+    println!("Execution time of {}, {}", name, now.elapsed().as_millis());
+    result
 }
