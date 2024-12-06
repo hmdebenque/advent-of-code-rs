@@ -6,11 +6,16 @@ use std::str::FromStr;
 
 pub fn day6(input: &String) -> String {
     let map = CharMatrix::from_str(input).unwrap();
+
+    // now we have our map and guards, let's draw our patrol
+
+    let visited_locations = get_guard_path(&map);
+
+    visited_locations.len().to_string()
+}
+
+fn get_guard_path(map: &CharMatrix) -> HashSet<Coordinates> {
     let mut guard = find_guard(&map);
-    println!("Guard found: {:?}", guard);
-
-    // now we have our map and guards, let's drw our patrol
-
     let mut visited_locations: HashSet<Coordinates> = HashSet::new();
     let coordinates = guard.location.clone();
     visited_locations.insert(coordinates);
@@ -29,8 +34,7 @@ pub fn day6(input: &String) -> String {
         println!("Guard located: {:?}", guard);
         visited_locations.insert(guard.location.clone());
     }
-
-    visited_locations.len().to_string()
+    visited_locations
 }
 
 fn find_guard(map: &CharMatrix) -> Guard {
@@ -42,7 +46,7 @@ fn find_guard(map: &CharMatrix) -> Guard {
         })
         .unwrap();
 
-    let mut guard = Guard::new(
+    let guard = Guard::new(
         guard_char,
         Direction::from(map.get_char_at(&guard_char).unwrap()),
     );
@@ -56,22 +60,21 @@ pub fn day6_2(input: &String) -> String {
     let guard = find_guard(&map);
     println!("Guard found: {:?}", guard);
 
+    // get guard path to avoid repetition
+    let visited_locations = get_guard_path(&map);
+
     // now we have our map and guards, let's drw our patrol
     let mut loop_count: usize = 0;
-    let map_bounds = map.get_bounds();
     // This is brute forcing, we could do it by just checking location on the guard path.
-    for x in 0..map_bounds.width {
-        for y in 0..map_bounds.height {
-            let coordinates = Coordinates::new(x as isize, y as isize);
-            let at_loc = map.get_char_at(&coordinates).unwrap();
-            if !MAP_OBJECTS.contains(&at_loc) {
-                // We crate a map copy and test if there is a loop
-                let mut map_copy = map.clone();
-                map_copy.insert_char('#', coordinates);
-                if is_map_loop(&map_copy, &guard) {
-                    println!("Loop created by placing element at {:?}", coordinates);
-                    loop_count += 1;
-                }
+    for coordinates in visited_locations {
+        let at_loc = map.get_char_at(&coordinates).unwrap();
+        if !MAP_OBJECTS.contains(&at_loc) {
+            // We crate a map copy and test if there is a loop
+            let mut map_copy = map.clone();
+            map_copy.insert_char('#', coordinates);
+            if is_map_loop(&map_copy, &guard) {
+                log::info!("Loop created by placing element at {:?}", coordinates);
+                loop_count += 1;
             }
         }
     }
@@ -99,7 +102,6 @@ fn is_map_loop(map: &CharMatrix, guard_original: &Guard) -> bool {
         // check looping
         let guard_new_position = (guard.location.to_owned(), guard.direction.to_owned());
         if visited_locations.contains(&guard_new_position) {
-            println!("Loop detected! Guard was at: {:?}", guard);
             return true;
         }
         visited_locations.insert(guard_new_position);

@@ -99,6 +99,6 @@ async fn download_input(auth_cookie: String, year: u16, day: u8) -> Result<Strin
 fn with_timer<T>(name: &str, function: &dyn Fn() -> T) -> T {
     let now = Instant::now();
     let result = function();
-    println!("Execution time of {}, {}", name, now.elapsed().as_millis());
+    println!("Execution time of {}, {}ms", name, now.elapsed().as_millis());
     result
 }

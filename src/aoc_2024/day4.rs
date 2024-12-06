@@ -1,6 +1,5 @@
-use std::fmt::Debug;
-use std::str::FromStr;
 use crate::aoc_2024::common::CharMatrix;
+use std::str::FromStr;
 
 pub fn day4(input: &String) -> String {
     let matrix = CharMatrix::from_str(input).unwrap();
