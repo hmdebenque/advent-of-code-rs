@@ -69,8 +69,11 @@ impl Operation {
             .unwrap()
     }
 
-    fn create_operators(&self) -> Vec<Operator> {
-        (0..self.values.len()).map(|_| ADD).collect()
+    fn get_value_in_base(base: usize, number: usize, position: usize) -> usize {
+        let divisor_to_round = base.pow(position as u32);
+        let value_rounded_to = number / divisor_to_round;
+        let value_at_modulo = value_rounded_to % base;
+        value_at_modulo
     }
 
     fn try_all_combinations(&self) -> bool {
@@ -83,25 +86,23 @@ impl Operation {
             .map(|combination_number| {
                 (0..op_size)
                     .map(|position| {
-                        let mut divisor_to_round = position * Operator::COUNT;
-                        if divisor_to_round == 0 {
-                            divisor_to_round = 1;
-                        }
-                        let value_rounded_to = combination_number / divisor_to_round;
-                        let value_at_modulo = value_rounded_to % Operator::COUNT;
-                        value_at_modulo
+                        Self::get_value_in_base(Operator::COUNT, combination_number, position)
                     })
                     .map(Operator::from)
                     .collect::<Vec<Operator>>()
             })
             // .inspect(|possibility| println!("Possibility found {:?}", possibility))
-            // .inspect(|combination| {println!("Combination OK: {}", combination)})
             .filter(|combination| self.compute(&combination) == self.result)
+            // .inspect(|combination| {println!("Combination OK: {}", combination)})
             .next();
 
         let is_some_matching = first_matching.is_some();
         if is_some_matching {
-            println!("Combinations found for {:?}: {:?}", self, first_matching.unwrap());
+            println!(
+                "Combinations found for {:?}: {:?}",
+                self,
+                first_matching.unwrap()
+            );
         } else {
             println!("No combination found for {:?}", self);
         }
@@ -143,6 +144,7 @@ mod tests {
 292: 11 6 16 20
 ";
 
+    // 3312271365652
     #[test]
     fn test_day7() {
         let input = String::from(PUZZLE_INPUT);
@@ -153,14 +155,41 @@ mod tests {
     }
 
     #[test]
-    fn test_day7_all_multiply() {
-        let input = String::from("120: 2 3 4 5
+    fn test_day7_all_multiply_all_add() {
+        let input = String::from(
+            "120: 2 3 4 5
 15: 1 2 3 4 5\
-");
+",
+        );
 
         let result = day7(&input);
 
         assert_eq!(String::from("135"), result);
+    }
+
+    #[test]
+    fn test_digit_extractor() {
+        assert_eq!(1, Operation::get_value_in_base(2, 0b00010, 1));
+        assert_eq!(1, Operation::get_value_in_base(2, 0b00001, 0));
+        assert_eq!(1, Operation::get_value_in_base(2, 0b10100, 2));
+        assert_eq!(1, Operation::get_value_in_base(2, 0b11000, 3));
+        assert_eq!(1, Operation::get_value_in_base(2, 0b10000, 4));
+        assert_eq!(0, Operation::get_value_in_base(2, 0b10000, 5));
+    }
+
+    #[test]
+    fn test_digit_extractor_2() {
+        assert_eq!(1, (0b10 / 2) % 2);
+        assert_eq!(1, (0b100 / 4) % 2);
+        assert_eq!(1, (0b1000 / 8) % 2);
+        assert_eq!(1, (0b10000 / 16) % 2);
+        assert_eq!(1, (0b10010 / 2) % 2);
+        // assert_eq!(0, );
+        // assert_eq!(0, );
+        // assert_eq!(0, );
+        // assert_eq!(0, );
+        // assert_eq!(0, );
+        // assert_eq!(1, );
     }
 
     #[test]
