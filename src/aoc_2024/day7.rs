@@ -1,4 +1,4 @@
-use crate::aoc_2024::day7::Operator::{ADD, MULTIPLY};
+use crate::aoc_2024::day7::Operator::{ADD, CONCAT, MULTIPLY};
 use std::fmt::Debug;
 use std::str::FromStr;
 use strum::EnumCount;
@@ -29,6 +29,7 @@ fn parse_operations(input: &String) -> Vec<Operation> {
 enum Operator {
     ADD,
     MULTIPLY,
+    CONCAT,
 }
 
 impl From<usize> for Operator {
@@ -36,6 +37,7 @@ impl From<usize> for Operator {
         match value {
             0 => ADD,
             1 => MULTIPLY,
+            2 => CONCAT,
             _ => unreachable!(),
         }
     }
@@ -64,6 +66,11 @@ impl Operation {
                 match operator {
                     MULTIPLY => acc * value,
                     ADD => acc + value,
+                    CONCAT => {
+                        let mut acc_as_string = acc.to_string();
+                        acc_as_string.push_str(value.to_string().as_str());
+                        usize::from_str(acc_as_string.as_str()).unwrap()
+                    }
                 }
             })
             .unwrap()
@@ -146,12 +153,12 @@ mod tests {
 
     // 3312271365652
     #[test]
-    fn test_day7() {
+    fn test_day7_2() {
         let input = String::from(PUZZLE_INPUT);
 
         let result = day7(&input);
 
-        assert_eq!(String::from("3749"), result);
+        assert_eq!(String::from("11387"), result);
     }
 
     #[test]
@@ -184,19 +191,5 @@ mod tests {
         assert_eq!(1, (0b1000 / 8) % 2);
         assert_eq!(1, (0b10000 / 16) % 2);
         assert_eq!(1, (0b10010 / 2) % 2);
-        // assert_eq!(0, );
-        // assert_eq!(0, );
-        // assert_eq!(0, );
-        // assert_eq!(0, );
-        // assert_eq!(0, );
-        // assert_eq!(1, );
-    }
-
-    #[test]
-    fn test_day7_2() {
-        let input = String::from(PUZZLE_INPUT);
-        let result = day7_2(&input);
-
-        assert_eq!(String::from("NYI"), result);
     }
 }
