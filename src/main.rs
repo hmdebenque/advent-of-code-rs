@@ -66,6 +66,10 @@ async fn main() -> std::result::Result<(), Error> {
                 with_timer("day 6 part 1", &|| aoc_2024::day6::day6(&input)),
                 with_timer("day 6 part 1", &|| aoc_2024::day6::day6_2(&input)),
             ),
+            7 => (
+                with_timer("day 7 part 1", &|| aoc_2024::day7::day7(&input)),
+                with_timer("day 7 part 1", &|| aoc_2024::day7::day7_2(&input)),
+            ),
             other => {
                 return Err(Error::from(format!("Cannot handle day {other}")));
             }
