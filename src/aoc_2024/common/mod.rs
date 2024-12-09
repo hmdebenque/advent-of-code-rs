@@ -18,6 +18,33 @@ impl Coordinates {
     }
 }
 
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
+pub struct Vector {
+    pub x: isize,
+    pub y: isize,
+}
+
+impl Vector {
+    pub fn new(x: isize, y: isize) -> Vector {
+        Vector { x, y }
+    }
+
+    pub fn new_from_to(from: &Coordinates, to: &Coordinates) -> Vector {
+        Vector {
+            x: to.x - from.x,
+            y: to.y - from.y,
+        }
+    }
+
+    pub fn move_from(&self, from: &Coordinates) -> Coordinates {
+        Coordinates::new(from.x + self.x, from.y + self.y)
+    }
+
+    pub fn reverse(&self) -> Vector {
+        Vector::new(-self.x, -self.y)
+    }
+}
+
 #[derive(Debug)]
 pub struct Rectangle {
     pub location: Coordinates,
@@ -88,6 +115,18 @@ pub struct CharMatrix {
     matrix: Vec<Vec<char>>,
 }
 
+impl CharMatrix {
+    pub fn copy_filled(&self, replacement: char) -> CharMatrix {
+        let mut new_matrix = crate::aoc_2024::common::CharMatrix::new();
+
+        self.matrix
+            .iter()
+            .map(|row| row.iter().map(|_| replacement).collect())
+            .for_each(|row| new_matrix.insert_row(row));
+        new_matrix
+    }
+}
+
 impl FromStr for CharMatrix {
     type Err = ();
 
@@ -98,6 +137,12 @@ impl FromStr for CharMatrix {
             .filter(|l| !l.is_empty())
             .fold(CharMatrix::new(), CharMatrix::parse_and_insert_line))
     }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
+pub struct CharMatrixElement {
+    pub coordinates: Coordinates,
+    pub value: char,
 }
 
 impl CharMatrix {
@@ -137,6 +182,23 @@ impl CharMatrix {
         } else {
             Err(())
         }
+    }
+
+    pub fn get_all_chars(&self) -> Vec<CharMatrixElement> {
+        self.matrix
+            .iter()
+            .enumerate()
+            .flat_map(|(y, chars)| {
+                chars
+                    .iter()
+                    .enumerate()
+                    .map(|(x, ch)| CharMatrixElement {
+                        coordinates: Coordinates::new(x as isize, y as isize),
+                        value: *ch,
+                    })
+                    .collect::<Vec<CharMatrixElement>>()
+            })
+            .collect()
     }
 
     pub fn search_text(&self) -> usize {
