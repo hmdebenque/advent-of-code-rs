@@ -125,6 +125,14 @@ impl CharMatrix {
             .for_each(|row| new_matrix.insert_row(row));
         new_matrix
     }
+
+    pub fn print(&self) -> String {
+        self.matrix
+            .iter()
+            .map(|row| row.iter().collect::<String>())
+            .map(|row| format!("{}\n", row))
+            .collect()
+    }
 }
 
 impl FromStr for CharMatrix {
@@ -174,6 +182,14 @@ impl CharMatrix {
             }
         }
         None
+    }
+
+    pub fn search_chars(&self, search: &char) -> Vec<Coordinates> {
+        self.get_all_chars()
+            .iter()
+            .filter(|c| search.eq(&c.value))
+            .map(|c| c.coordinates)
+            .collect()
     }
 
     pub fn get_char_at(&self, location: &Coordinates) -> Result<char, ()> {
