@@ -6,6 +6,7 @@ use reqwest::ClientBuilder;
 
 mod aoc_2023;
 mod aoc_2024;
+mod aoc_2025;
 
 error_chain! {
     foreign_links {
@@ -88,6 +89,15 @@ async fn main() -> std::result::Result<(), Error> {
         };
         log::info!("Result 2024 for day {} part 1 = {}", args.day, part1);
         log::info!("Result 2024 for day {} part 2 = {}", args.day, part2);
+    } else if args.year == 2025 {
+        let (part1, part2) = match args.day {
+            1 => (aoc_2025::day1::day1(&input), aoc_2025::day1::day1_2(&input)),
+            other => {
+                return Err(Error::from(format!("Cannot handle day {other}")));
+            }
+        };
+        log::info!("Result 2025 for day {} part 1 = {}", args.day, part1);
+        log::info!("Result 2025 for day {} part 2 = {}", args.day, part2);
     }
 
     Ok(())
