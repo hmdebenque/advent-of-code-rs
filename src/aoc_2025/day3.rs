@@ -1,10 +1,4 @@
-use std::cmp::{max, min};
-use std::collections::HashSet;
-use std::isize;
-use std::str::{Chars, FromStr};
-use log::{debug, info};
-use strum_macros::{Display, ToString};
-use crate::aoc_2025::common::Range;
+use log::{debug};
 
 
 #[derive(Debug)]
@@ -14,40 +8,45 @@ struct PowerBank {
 
 impl PowerBank {
     /// Get the max from the power bank
-    fn max_joltage(&self) -> usize {
-        let batteries_nb = self.batteries.len();
-        if batteries_nb == 0 {
-            return 0;
-        } else if batteries_nb == 1 {
-            return self.batteries[0];
+    /// nb_of_batteries = nb of batteries that must be activated.
+    fn max_joltage(&self, batteries_max_active: usize) -> usize {
+        let batteries_len = self.batteries.len();
+        if batteries_len < batteries_max_active {
+            self.batteries.iter().rev().enumerate().map(|(index, val)| *val * (index + 1)).sum()
         } else {
-            let max_index = batteries_nb - 1;
-            let mut max_value: usize = 0;
-            let mut max_value_index: usize = 0;
-            for ( index, value) in self.batteries.iter().enumerate() {
-                if index < max_index && *value > max_value {
-                    max_value = *value;
-                    max_value_index = index;
-                }
+            let mut last_max_index = 0;
+
+            let mut total = 0;
+            let batteries_max_index = batteries_len - 1;
+
+            for i in 0..batteries_max_active {
+                let end_index = batteries_max_index - batteries_max_active + i + 1;
+
+                let search_slice: &[usize] = &self.batteries[last_max_index..=end_index];
+                let (relative_max_index, max_value) = search_slice.iter().enumerate().max_by(|(index1, val), (index2, val2)| { val.cmp(val2).then(index2.cmp(index1)) }
+                ).unwrap();
+                total += *max_value * 10usize.pow((batteries_max_active - i - 1) as u32);
+                last_max_index = last_max_index + relative_max_index + 1;
             }
-            let next_max_after = *(self.batteries.iter().skip(max_value_index + 1).max().unwrap());
-            return (max_value * 10) + next_max_after;
+            println!("Max jolt found for {self:?} is {total}");
+            total
         }
     }
 
 }
 
 pub fn day3(input: &String) -> String {
-    let mut inputs = parse_input(input);
-    let sum: usize = inputs.iter()
-        .map(PowerBank::max_joltage)
-        .sum();
-
-    sum.to_string()
+    parse_input(input).iter()
+        .map(|pb| pb.max_joltage(2))
+        .sum::<usize>()
+        .to_string()
 }
 
 pub fn day3_2(input: &String) -> String {
-    String::from("todo")
+    parse_input(input).iter()
+        .map(|pb| pb.max_joltage(12))
+        .sum::<usize>()
+        .to_string()
 }
 
 fn parse_input(input: &str) -> Vec<PowerBank> {
@@ -95,6 +94,6 @@ mod tests {
 
         let result = day3_2(&input);
 
-        assert_eq!(String::from("4174379265"), result);
+        assert_eq!(String::from("3121910778619"), result);
     }
 }
