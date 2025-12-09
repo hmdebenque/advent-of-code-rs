@@ -10,7 +10,11 @@ use std::{println as info, println as warn};
 pub fn day13(input: &String) -> String {
     let machines = parse_machines(input);
     info!("Parsed input:\n{:?}", machines);
-    machines.iter().filter_map(Machine::solve).sum::<usize>().to_string()
+    machines
+        .iter()
+        .filter_map(Machine::solve)
+        .sum::<usize>()
+        .to_string()
 }
 
 pub fn day13_2(input: &String) -> String {
@@ -45,7 +49,11 @@ impl FromStr for Machine {
 
         let prize = split.next();
         let mut prize_iter = prize.unwrap().split(' ').skip(1);
-        let prize_x: isize = prize_iter.next().unwrap()[2..].strip_suffix(",").unwrap().parse().unwrap();
+        let prize_x: isize = prize_iter.next().unwrap()[2..]
+            .strip_suffix(",")
+            .unwrap()
+            .parse()
+            .unwrap();
         let prize_y: isize = prize_iter.next().unwrap()[2..].parse().unwrap();
 
         Ok(Machine::new(
@@ -54,7 +62,6 @@ impl FromStr for Machine {
             Coordinates::new(prize_x, prize_y),
         ))
     }
-    
 }
 
 impl Machine {

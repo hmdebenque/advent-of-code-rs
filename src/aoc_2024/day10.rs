@@ -1,11 +1,11 @@
 use crate::aoc_2024::common::{CharMatrix, Coordinates, Direction};
 #[cfg(not(test))]
-use log::{info, warn};
+use log::info;
 // Use log crate when building application
 use std::collections::HashSet;
-use std::str::FromStr;
 #[cfg(test)]
-use std::{println as info, println as warn};
+use std::println as info;
+use std::str::FromStr;
 
 pub fn day10(input: &String) -> String {
     let char_matrix = CharMatrix::from_str(input).unwrap();
@@ -33,9 +33,7 @@ pub fn day10_2(input: &String) -> String {
         .iter()
         .map(|x| {
             println!("New exploration starting at: {:?}", x);
-            explore(&char_matrix, -1, x)
-                .iter()
-                .count()
+            explore(&char_matrix, -1, x).iter().count()
         })
         .sum::<usize>()
         .to_string()

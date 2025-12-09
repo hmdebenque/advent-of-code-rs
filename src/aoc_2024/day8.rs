@@ -89,15 +89,15 @@ fn get_antinodes_resonating(
 ) -> Vec<Coordinates> {
     let from_c1_to_c2 = Vector::new_from_to(c1, c2);
     let from_c2_to_c1 = from_c1_to_c2.reverse();
-    
+
     let mut coords = Vec::new();
-    
+
     let mut antinode_c1 = c1.to_owned();
     while bounds.is_in_bounds(&antinode_c1) {
         coords.push(antinode_c1);
         antinode_c1 = from_c2_to_c1.move_from(&antinode_c1);
     }
-    
+
     let mut antinode_c2 = c2.to_owned();
     while bounds.is_in_bounds(&antinode_c2) {
         coords.push(antinode_c2);
@@ -197,7 +197,7 @@ mod tests {
 ..........
 ..........
 ..........
-.........."
+..........",
         );
 
         let result = day8_2(&input);

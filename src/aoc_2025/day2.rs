@@ -1,18 +1,17 @@
+use crate::aoc_2025::common::Range;
+use log::info;
 use std::cmp::{max, min};
 use std::collections::HashSet;
 use std::isize;
 use std::str::FromStr;
-use log::info;
-use crate::aoc_2025::common::Range;
 
 pub fn day2(input: &String) -> String {
     let mut inputs = parse_input(input);
-    let sum: usize = inputs.iter()
+    let sum: usize = inputs
+        .iter()
         .map(|r| r)
         .flat_map(|r| get_all_values(&r))
-        .filter(|x| {
-            has_repeating_pattern(x, 2)
-        })
+        .filter(|x| has_repeating_pattern(x, 2))
         .sum();
 
     sum.to_string()
@@ -20,12 +19,11 @@ pub fn day2(input: &String) -> String {
 
 pub fn day2_2(input: &String) -> String {
     let mut inputs = parse_input(input);
-    let sum: usize = inputs.iter()
+    let sum: usize = inputs
+        .iter()
         .map(|r| r)
         .flat_map(|r| get_all_values(&r))
-        .filter(|x| {
-            has_repeating_pattern(x, usize::MAX)
-        })
+        .filter(|x| has_repeating_pattern(x, usize::MAX))
         .sum();
 
     sum.to_string()
@@ -45,7 +43,8 @@ fn has_repeating_pattern(input: &usize, max_limit: usize) -> bool {
         if input_len % parts == 0 {
             let part_size = input_len / parts;
 
-            let chunks: HashSet<String> = input_str.chars()
+            let chunks: HashSet<String> = input_str
+                .chars()
                 .collect::<Vec<_>>()
                 .chunks(part_size)
                 .map(|chunk| chunk.iter().collect())
@@ -69,9 +68,8 @@ fn parse_input(input: &str) -> Vec<Range> {
             let sp: Vec<&str> = s.split('-').collect();
             let start = usize::from_str(sp[0]).unwrap();
             let end = usize::from_str(sp[1]).unwrap();
-            Range{start, end}
-        }
-        )
+            Range { start, end }
+        })
         .collect()
 }
 

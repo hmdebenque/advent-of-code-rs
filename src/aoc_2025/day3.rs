@@ -1,9 +1,8 @@
-use log::{debug};
-
+use log::debug;
 
 #[derive(Debug)]
 struct PowerBank {
-    batteries: Vec<usize>
+    batteries: Vec<usize>,
 }
 
 impl PowerBank {
@@ -12,7 +11,12 @@ impl PowerBank {
     fn max_joltage(&self, batteries_max_active: usize) -> usize {
         let batteries_len = self.batteries.len();
         if batteries_len < batteries_max_active {
-            self.batteries.iter().rev().enumerate().map(|(index, val)| *val * (index + 1)).sum()
+            self.batteries
+                .iter()
+                .rev()
+                .enumerate()
+                .map(|(index, val)| *val * (index + 1))
+                .sum()
         } else {
             let mut last_max_index = 0;
 
@@ -23,8 +27,11 @@ impl PowerBank {
                 let end_index = batteries_max_index - batteries_max_active + i + 1;
 
                 let search_slice: &[usize] = &self.batteries[last_max_index..=end_index];
-                let (relative_max_index, max_value) = search_slice.iter().enumerate().max_by(|(index1, val), (index2, val2)| { val.cmp(val2).then(index2.cmp(index1)) }
-                ).unwrap();
+                let (relative_max_index, max_value) = search_slice
+                    .iter()
+                    .enumerate()
+                    .max_by(|(index1, val), (index2, val2)| val.cmp(val2).then(index2.cmp(index1)))
+                    .unwrap();
                 total += *max_value * 10usize.pow((batteries_max_active - i - 1) as u32);
                 last_max_index = last_max_index + relative_max_index + 1;
             }
@@ -32,18 +39,19 @@ impl PowerBank {
             total
         }
     }
-
 }
 
 pub fn day3(input: &String) -> String {
-    parse_input(input).iter()
+    parse_input(input)
+        .iter()
         .map(|pb| pb.max_joltage(2))
         .sum::<usize>()
         .to_string()
 }
 
 pub fn day3_2(input: &String) -> String {
-    parse_input(input).iter()
+    parse_input(input)
+        .iter()
         .map(|pb| pb.max_joltage(12))
         .sum::<usize>()
         .to_string()
@@ -55,7 +63,8 @@ fn parse_input(input: &str) -> Vec<PowerBank> {
         .map(|l| l.trim())
         .filter(|l| !l.is_empty())
         .map(|s| {
-            let batteries = s.chars()
+            let batteries = s
+                .chars()
                 .map(|c| c.to_digit(10))
                 .map(Option::unwrap)
                 .map(|x| x as usize)
@@ -64,8 +73,7 @@ fn parse_input(input: &str) -> Vec<PowerBank> {
             println!("parsed Power bank: {bank:?}");
             debug!("parsed Power bank: {bank:?}");
             bank
-        }
-        )
+        })
         .collect()
 }
 

@@ -19,7 +19,6 @@ impl Range {
 }
 
 impl<'a> IntoIterator for &'a Range {
-
     type Item = &'a usize;
     type IntoIter = std::array::IntoIter<&'a usize, 2>;
 

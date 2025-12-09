@@ -1,11 +1,12 @@
-use std::str::FromStr;
-use log::{debug};
-use strum::IntoEnumIterator;
 use crate::aoc_2024::common::{CharMatrix, Coordinates, Direction};
+use log::debug;
+use std::str::FromStr;
+use strum::IntoEnumIterator;
 
 pub fn day4(input: &String) -> String {
     let matrix = parse_input(input);
-    matrix.search_chars(&'@')
+    matrix
+        .search_chars(&'@')
         .iter()
         .map(|x| {
             Direction::iter()
@@ -29,15 +30,19 @@ pub fn day4_2(input: &String) -> String {
     let mut removed_total = 0;
 
     while true {
-        let removed: Vec<Coordinates> = matrix.search_chars(&SLOT_FILE_PRESENT_CHAR)
+        let removed: Vec<Coordinates> = matrix
+            .search_chars(&SLOT_FILE_PRESENT_CHAR)
             .iter()
             .map(|x| {
-                (*x, Direction::iter()
-                    .map(|dir| matrix.get_char_at(&dir.advance(x)))
-                    .filter(|result| result.is_ok())
-                    .map(|result| result.unwrap())
-                    .filter(|result| *result == SLOT_FILE_PRESENT_CHAR)
-                    .count())
+                (
+                    *x,
+                    Direction::iter()
+                        .map(|dir| matrix.get_char_at(&dir.advance(x)))
+                        .filter(|result| result.is_ok())
+                        .map(|result| result.unwrap())
+                        .filter(|result| *result == SLOT_FILE_PRESENT_CHAR)
+                        .count(),
+                )
             })
             .filter(|(x, adjacent_count)| *adjacent_count < 4usize)
             .map(|(x, adjacent_count)| x)

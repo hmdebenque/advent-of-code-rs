@@ -1,6 +1,6 @@
+use log::info;
 use std::isize;
 use std::str::FromStr;
-use log::info;
 
 pub fn day1(input: &String) -> String {
     let inputs = parse_input(input);
@@ -9,13 +9,15 @@ pub fn day1(input: &String) -> String {
     let mut zero_touched = 0;
     for combi in inputs {
         if combi.starts_with("L") {
-            let option = combi.strip_prefix("L")
+            let option = combi
+                .strip_prefix("L")
                 .map(|s| isize::from_str(s))
                 .map(|r| r.unwrap())
                 .unwrap();
             dial = (dial - option) % 100;
         } else if combi.starts_with("R") {
-            let option = combi.strip_prefix("R")
+            let option = combi
+                .strip_prefix("R")
                 .map(|s| isize::from_str(s))
                 .map(|r| r.unwrap())
                 .unwrap();
@@ -24,7 +26,7 @@ pub fn day1(input: &String) -> String {
 
         info!("Instruction: {combi}, dial={dial}");
         if dial == 0 {
-          zero_touched += 1;
+            zero_touched += 1;
         }
     }
 
@@ -38,22 +40,23 @@ pub fn day1_2(input: &String) -> String {
     let mut zero_touched = 0;
     for combi in inputs {
         if combi.starts_with("L") {
-            let option = combi.strip_prefix("L")
+            let option = combi
+                .strip_prefix("L")
                 .map(|s| isize::from_str(s))
                 .map(|r| r.unwrap())
                 .unwrap_or_else(|| {
                     panic!("Cannot parse input {combi}");
                 });
             for _ in 0..option {
-
                 dial = if dial == 0 { 99 } else { dial - 1 };
                 if dial == 0 {
-                    zero_touched+=1;
+                    zero_touched += 1;
                     info!("Zero touched");
                 }
             }
         } else {
-            let option = combi.strip_prefix("R")
+            let option = combi
+                .strip_prefix("R")
                 .map(|s| isize::from_str(s))
                 .map(|r| r.unwrap())
                 .unwrap_or_else(|| {
@@ -62,7 +65,7 @@ pub fn day1_2(input: &String) -> String {
             for _ in 0..option {
                 dial = if dial == 99 { 0 } else { dial + 1 };
                 if dial == 0 {
-                    zero_touched+=1;
+                    zero_touched += 1;
                     info!("Zero touched");
                 }
             }

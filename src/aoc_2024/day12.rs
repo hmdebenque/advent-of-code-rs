@@ -20,7 +20,6 @@ pub fn day12_2(input: &String) -> String {
     String::from("NYI")
 }
 
-
 fn explore(map: &CharMatrix, previous_level: isize, location: &Coordinates) -> Vec<Coordinates> {
     let level_opt = map.get_char_at(location);
     if level_opt.is_err() {

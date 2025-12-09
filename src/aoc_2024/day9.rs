@@ -147,7 +147,12 @@ impl MemoryMap {
             space.reduce_size_by(block_to_move.size);
             self.blocks[block_pos] = MemoryBlock::new_empty(block_to_move.size);
             self.blocks.insert(space_pos, block_to_move);
-            log::debug!("Moved {} of size {} to location {}", block_to_move.id, block_to_move.size, space_pos);
+            log::debug!(
+                "Moved {} of size {} to location {}",
+                block_to_move.id,
+                block_to_move.size,
+                space_pos
+            );
             true
         } else {
             log::debug!("Couldn't Move {}", block_to_move.id);
