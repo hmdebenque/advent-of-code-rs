@@ -1,5 +1,4 @@
 use crate::aoc_2024::common::{CharMatrix, Coordinates, Direction};
-use log::debug;
 use std::str::FromStr;
 use strum::IntoEnumIterator;
 
@@ -29,7 +28,7 @@ pub fn day4_2(input: &String) -> String {
 
     let mut removed_total = 0;
 
-    while true {
+    loop {
         let removed: Vec<Coordinates> = matrix
             .search_chars(&SLOT_FILE_PRESENT_CHAR)
             .iter()
@@ -44,8 +43,8 @@ pub fn day4_2(input: &String) -> String {
                         .count(),
                 )
             })
-            .filter(|(x, adjacent_count)| *adjacent_count < 4usize)
-            .map(|(x, adjacent_count)| x)
+            .filter(|(_, adjacent_count)| *adjacent_count < 4usize)
+            .map(|(x, _)| x)
             .collect();
         if removed.is_empty() {
             break;

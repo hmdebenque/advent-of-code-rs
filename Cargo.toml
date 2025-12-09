@@ -9,7 +9,7 @@ authors = ["hmdebenque"]
 [dependencies]
 clap = { version = "4.5.22", features = ["derive"] }
 env_logger = "0.11.5"
-error-chain = "0.12.4"
+anyhow = "1"
 log = "0.4.22"
 regex = "1.11.1"
 reqwest = { version = "0.12.9", features = ["blocking"] }

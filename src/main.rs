@@ -1,19 +1,12 @@
 use std::time::{Duration, Instant};
 
+use anyhow::{anyhow, Result};
 use clap::Parser;
-use error_chain::error_chain;
 use reqwest::ClientBuilder;
 
 mod aoc_2023;
 mod aoc_2024;
 mod aoc_2025;
-
-error_chain! {
-    foreign_links {
-        Io(std::io::Error);
-        HttpRequest(reqwest::Error);
-    }
-}
 
 #[derive(Parser, Debug)]
 #[command(author, version, about)]
@@ -36,7 +29,7 @@ struct Args {
 }
 
 #[tokio::main]
-async fn main() -> std::result::Result<(), Error> {
+async fn main() -> Result<()> {
     log::info!("Initialization");
     env_logger::init();
     let args = Args::parse();
@@ -51,7 +44,7 @@ async fn main() -> std::result::Result<(), Error> {
             2 => (aoc_2023::day2::day2(&input), aoc_2023::day2::day2_2(&input)),
             3 => (aoc_2023::day3::day3(&input), aoc_2023::day3::day3_2(&input)),
             other => {
-                return Err(Error::from(format!("Cannot handle day {other}")));
+                return Err(anyhow!("Cannot handle day {other}"));
             }
         };
         log::info!("Result for day {} part 1 = {}", args.day, part1);
@@ -83,8 +76,10 @@ async fn main() -> std::result::Result<(), Error> {
                 with_timer("day 10 part 1", &|| aoc_2024::day10::day10(&input)),
                 with_timer("day 10 part 2", &|| aoc_2024::day10::day10_2(&input)),
             ),
+            12 => (aoc_2024::day12::day12(&input), aoc_2024::day12::day12_2(&input)),
+            13 => (aoc_2024::day13::day13(&input), aoc_2024::day13::day13_2(&input)),
             other => {
-                return Err(Error::from(format!("Cannot handle day {other}")));
+                return Err(anyhow!("Cannot handle day {other}"));
             }
         };
         log::info!("Result 2024 for day {} part 1 = {}", args.day, part1);
@@ -97,7 +92,7 @@ async fn main() -> std::result::Result<(), Error> {
             4 => (aoc_2025::day4::day4(&input), aoc_2025::day4::day4_2(&input)),
             5 => (aoc_2025::day5::day5(&input), aoc_2025::day5::day5_2(&input)),
             other => {
-                return Err(Error::from(format!("Cannot handle day {other}")));
+                return Err(anyhow!("Cannot handle day {other}"));
             }
         };
         log::info!("Result 2025 for day {} part 1 = {}", args.day, part1);

@@ -1,11 +1,10 @@
-use crate::aoc_2024::common::{CharMatrix, Coordinates, Direction, Vector};
+use crate::aoc_2024::common::{CharMatrix, Coordinates, Vector};
 #[cfg(not(test))]
-use log::{info, warn};
+use log::{info};
 // Use log crate when building application
-use std::collections::HashSet;
 use std::str::FromStr;
 #[cfg(test)]
-use std::{println as info, println as warn};
+use std::{println as info};
 
 pub fn day13(input: &String) -> String {
     let machines = parse_machines(input);

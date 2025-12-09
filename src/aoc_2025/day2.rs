@@ -1,12 +1,10 @@
 use crate::aoc_2025::common::Range;
-use log::info;
-use std::cmp::{max, min};
+use std::cmp::min;
 use std::collections::HashSet;
-use std::isize;
 use std::str::FromStr;
 
 pub fn day2(input: &String) -> String {
-    let mut inputs = parse_input(input);
+    let inputs = parse_input(input);
     let sum: usize = inputs
         .iter()
         .map(|r| r)
@@ -18,7 +16,7 @@ pub fn day2(input: &String) -> String {
 }
 
 pub fn day2_2(input: &String) -> String {
-    let mut inputs = parse_input(input);
+    let inputs = parse_input(input);
     let sum: usize = inputs
         .iter()
         .map(|r| r)
