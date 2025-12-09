@@ -17,7 +17,7 @@ tokio = { version = "1.42.0", features = ["macros", "rt-multi-thread"] }
 test-log = "0.2.16"
 strum = "0.26.3"
 strum_macros = "0.26.4"
-
+ranges = "0.4.0"
 
 # diff ruby/java c'est pratique mais pas pour les frontends
 # => prevoir aussi du typescript
