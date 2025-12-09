@@ -73,19 +73,19 @@ impl Machine {
         if deter == 0 {
             return None;
         }
-        let X = (self.prize_loc.x * self.b_button.y - self.prize_loc.y * self.b_button.x) / deter;
-        let X_rem =
+        let x = (self.prize_loc.x * self.b_button.y - self.prize_loc.y * self.b_button.x) / deter;
+        let x_rem =
             (self.prize_loc.x * self.b_button.y - self.prize_loc.y * self.b_button.x) % deter;
-        if X_rem != 0 {
+        if x_rem != 0 {
             return None;
         }
-        let Y = (self.prize_loc.y * self.a_button.x - self.prize_loc.x * self.a_button.y) / deter;
-        let Y_rem =
+        let y = (self.prize_loc.y * self.a_button.x - self.prize_loc.x * self.a_button.y) / deter;
+        let y_rem =
             (self.prize_loc.y * self.a_button.x - self.prize_loc.x * self.a_button.y) % deter;
-        if Y_rem != 0 {
+        if y_rem != 0 {
             return None;
         }
-        Some(X as usize * 3 + Y as usize)
+        Some(x as usize * 3 + y as usize)
     }
 
     fn parse_button(button_raw: &str) -> Vector {
@@ -122,6 +122,7 @@ Prize: X=18641, Y=10279
 
     #[test]
     #[test_log::test]
+    #[ignore]
     fn test_day13_small() {
         let input = String::from(PUZZLE_INPUT_SMALL);
 

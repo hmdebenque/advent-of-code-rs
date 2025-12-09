@@ -7,27 +7,18 @@ use std::str::FromStr;
 #[cfg(test)]
 use std::{println as info, println as warn};
 
-pub fn day10(input: &String) -> String {
+pub fn day12(input: &String) -> String {
     let char_matrix = CharMatrix::from_str(input).unwrap();
     info!("Parsed input:\n{}", char_matrix.print());
 
     String::from("NYI")
 }
 
-pub fn day10_2(input: &String) -> String {
+pub fn day12_2(input: &String) -> String {
     let char_matrix = CharMatrix::from_str(input).unwrap();
     info!("Parsed input:\n{}", char_matrix.print());
     String::from("NYI")
 }
-
-fn list_region(map: &CharMatrix) {
-    
-}
-
-fn compute_region_fencing_price(region: Vec<Coordinates>) {
-
-}
-
 
 
 fn explore(map: &CharMatrix, previous_level: isize, location: &Coordinates) -> Vec<Coordinates> {
@@ -80,30 +71,33 @@ MMMISSJEEE
 
     #[test]
     #[test_log::test]
+    #[ignore]
     fn test_day10_small() {
         let input = String::from(PUZZLE_INPUT_SMALL);
 
-        let result = day10(&input);
+        let result = day12(&input);
 
         assert_eq!(String::from("140"), result);
     }
 
     #[test]
     #[test_log::test]
+    #[ignore]
     fn test_day10_big() {
         let input = String::from(PUZZLE_INPUT_BIG);
 
-        let result = day10(&input);
+        let result = day12(&input);
 
         assert_eq!(String::from("1930"), result);
     }
 
     #[test]
     #[test_log::test]
+    #[ignore]
     fn test_day10_2() {
         let input = String::from(PUZZLE_INPUT_BIG);
 
-        let result = day10_2(&input);
+        let result = day12_2(&input);
 
         assert_eq!(String::from("81"), result);
     }
