@@ -92,6 +92,7 @@ async fn main() -> Result<()> {
             4 => (aoc_2025::day4::day4(&input), aoc_2025::day4::day4_2(&input)),
             5 => (aoc_2025::day5::day5(&input), aoc_2025::day5::day5_2(&input)),
             6 => (aoc_2025::day6::day6(&input), aoc_2025::day6::day6_2(&input)),
+            7 => (aoc_2025::day7::day7(&input), aoc_2025::day7::day7_2(&input)),
             other => {
                 return Err(anyhow!("Cannot handle day {other}"));
             }

@@ -71,7 +71,7 @@ pub fn day6_2(input: &String) -> String {
         if !MAP_OBJECTS.contains(&at_loc) {
             // We crate a map copy and test if there is a loop
             let mut map_copy = map.clone();
-            map_copy.insert_char('#', coordinates);
+            map_copy.set_char('#', &coordinates);
             if is_map_loop(&map_copy, &guard) {
                 log::info!("Loop created by placing element at {:?}", coordinates);
                 loop_count += 1;

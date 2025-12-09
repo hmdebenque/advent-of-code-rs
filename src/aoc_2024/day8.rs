@@ -50,7 +50,7 @@ fn find_antinodes_count(input: &String, include_resonating: bool) -> String {
         })
         .fold(map.copy_filled('.'), |mut acc, set| {
             set.iter().for_each(|c| {
-                acc.insert_char('X', *c);
+                acc.set_char('X', c);
             });
             acc
         })

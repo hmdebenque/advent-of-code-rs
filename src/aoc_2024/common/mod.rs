@@ -16,6 +16,10 @@ impl Coordinates {
     pub fn new(x: isize, y: isize) -> Coordinates {
         Coordinates { x, y }
     }
+
+    pub fn advance(&self, direction: Direction) -> Coordinates {
+        direction.advance(&self)
+    }
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
@@ -117,7 +121,7 @@ pub struct CharMatrix {
 
 impl CharMatrix {
     pub fn copy_filled(&self, replacement: char) -> CharMatrix {
-        let mut new_matrix = crate::aoc_2024::common::CharMatrix::new();
+        let mut new_matrix = CharMatrix::new();
 
         self.matrix
             .iter()
@@ -162,7 +166,7 @@ impl CharMatrix {
         self.matrix.push(row);
     }
 
-    pub fn insert_char(&mut self, value: char, location: Coordinates) {
+    pub fn set_char(&mut self, value: char, location: &Coordinates) {
         self.matrix[location.y as usize][location.x as usize] = value;
     }
 

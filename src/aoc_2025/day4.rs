@@ -51,7 +51,7 @@ pub fn day4_2(input: &String) -> String {
         } else {
             removed_total += removed.len();
             for coordinate in removed {
-                matrix.insert_char(EMPTY_SLOT_CHAR, coordinate);
+                matrix.set_char(EMPTY_SLOT_CHAR, &coordinate);
             }
         }
     }
