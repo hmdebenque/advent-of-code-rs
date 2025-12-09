@@ -1,10 +1,10 @@
-use crate::aoc_2024::common::{CharMatrix};
+use crate::aoc_2024::common::CharMatrix;
 #[cfg(not(test))]
-use log::{info};
+use log::info;
 // Use log crate when building application
-use std::str::FromStr;
 #[cfg(test)]
-use std::{println as info};
+use std::println as info;
+use std::str::FromStr;
 
 pub fn day12(input: &String) -> String {
     let char_matrix = CharMatrix::from_str(input).unwrap();

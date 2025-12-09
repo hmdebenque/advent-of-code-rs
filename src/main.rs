@@ -76,8 +76,14 @@ async fn main() -> Result<()> {
                 with_timer("day 10 part 1", &|| aoc_2024::day10::day10(&input)),
                 with_timer("day 10 part 2", &|| aoc_2024::day10::day10_2(&input)),
             ),
-            12 => (aoc_2024::day12::day12(&input), aoc_2024::day12::day12_2(&input)),
-            13 => (aoc_2024::day13::day13(&input), aoc_2024::day13::day13_2(&input)),
+            12 => (
+                aoc_2024::day12::day12(&input),
+                aoc_2024::day12::day12_2(&input),
+            ),
+            13 => (
+                aoc_2024::day13::day13(&input),
+                aoc_2024::day13::day13_2(&input),
+            ),
             other => {
                 return Err(anyhow!("Cannot handle day {other}"));
             }

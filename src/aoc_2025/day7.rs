@@ -1,12 +1,12 @@
-use std::collections::HashSet;
+use crate::aoc_2024::common::Direction::{East, South, West};
 use crate::aoc_2024::common::{CharMatrix, Coordinates, Direction};
-use std::str::FromStr;
 #[cfg(not(test))]
 use log::info;
+use std::collections::HashSet;
 #[cfg(test)]
 use std::println as info;
-use std::time::{Duration, Instant};
-use crate::aoc_2024::common::Direction::{East, South, West};
+use std::str::FromStr;
+use std::time::Instant;
 
 pub fn day7(input: &String) -> String {
     let map = CharMatrix::from_str(input).unwrap();
@@ -18,13 +18,15 @@ pub fn day7(input: &String) -> String {
     let mut beams: HashSet<Coordinates> = map.search_chars(&'S').into_iter().collect();
     let mut nb_of_split = 0;
     loop {
-        beams = beams.iter().map(|b| b.advance(South))
+        beams = beams
+            .iter()
+            .map(|b| b.advance(South))
             .filter(|b| map_bounds.is_in_bounds(b))
             .flat_map(|b| {
                 if map.get_char_at(&b).unwrap().eq(&'^') {
                     // split
                     info!("Split happened!");
-                    nb_of_split+=1;
+                    nb_of_split += 1;
                     vec![b.advance(West), b.advance(East)]
                 } else {
                     vec![b]
@@ -33,39 +35,49 @@ pub fn day7(input: &String) -> String {
             .filter(|b| map_bounds.is_in_bounds(b))
             .collect();
         if beams.is_empty() {
-            break
+            break;
         }
     }
 
     nb_of_split.to_string()
 }
 
+#[derive(Debug)]
 struct Beam {
     coordinates: Coordinates,
-    combi: usize
+    combi: usize,
 }
 
 impl Beam {
-
     fn advance(&self, direction: Direction) -> Beam {
-        Beam {coordinates: self.coordinates.advance(direction), combi: self.combi}
+        Beam {
+            coordinates: self.coordinates.advance(direction),
+            combi: self.combi,
+        }
     }
 
-    fn fuse(&mut self) {
-        self.combi = self.combi + 1;
+    fn fuse(&mut self, other: Beam) {
+        self.combi = self.combi + other.combi;
+    }
+
+    fn new(coordinates: Coordinates) -> Beam {
+        Beam {
+            coordinates,
+            combi: 1,
+        }
     }
 }
 
 pub fn day7_2(input: &String) -> String {
     let map = CharMatrix::from_str(input).unwrap();
-    let map_bounds = map.get_bounds();
 
     let map_str = map.print();
     info!("Map:\n{map_str}");
 
-    let mut beams: Vec<Beam> = map.search_chars(&'S')
+    let mut beams: Vec<Beam> = map
+        .search_chars(&'S')
         .into_iter()
-        .map(|x| Beam{coordinates: x, combi: 0})
+        .map(|x| Beam::new(x))
         .collect();
 
     let mut nb_of_split = 1;
@@ -74,24 +86,29 @@ pub fn day7_2(input: &String) -> String {
         let start_time = Instant::now();
         let (beams_advanced, splits) = advance_beams(&map, beams);
         beams = beams_advanced;
-        nb_of_split+= splits;
+        nb_of_split += splits;
 
-        // let mut matrix_clone = map.clone();
-        // for beam in &beams {
-        //     matrix_clone.set_char('|', beam);
-        // }
-        // let map_with_beams = matrix_clone.print();
+        let mut matrix_clone = map.clone();
+        for beam in &beams {
+            matrix_clone.set_char('|', &beam.coordinates);
+        }
 
         let duration_milli = start_time.elapsed().as_millis();
 
-        info!("Iter {}, beams {} advanced:{}", loop_nb, beams.len(), duration_milli);
+        info!("beams {beams:?}");
+        info!(
+            "Iter {}, beams {} advanced:{}",
+            loop_nb,
+            beams.len(),
+            duration_milli
+        );
 
         if beams.is_empty() {
-            break
+            break;
         }
-        loop_nb+=1;
+        loop_nb += 1;
         if loop_nb > 1000 {
-            break
+            break;
         }
     }
 
@@ -103,31 +120,37 @@ fn advance_beams(map: &CharMatrix, beams: Vec<Beam>) -> (Vec<Beam>, usize) {
     let mut beams_advanced: Vec<Beam> = Vec::with_capacity(beams.len() * 2);
     let mut splits = 0;
 
-    for beam in  beams.iter().map(|b| b.advance(South)).filter(|b| map_bounds.is_in_bounds(&b.coordinates)) {
+    for beam in beams
+        .iter()
+        .map(|b| b.advance(South))
+        .filter(|b| map_bounds.is_in_bounds(&b.coordinates))
+    {
         if map.get_char_at(&beam.coordinates).unwrap().eq(&'^') {
-            splits += 1;
+            splits += beam.combi;
             let west = beam.advance(West);
             let east = beam.advance(East);
             if map_bounds.is_in_bounds(&west.coordinates) {
-                let mut existing: Vec<&mut Beam> = beams_advanced.iter_mut().filter(|x| x.coordinates == west.coordinates).collect();
+                let mut existing: Vec<&mut Beam> = beams_advanced
+                    .iter_mut()
+                    .filter(|x| x.coordinates == west.coordinates)
+                    .collect();
                 if existing.is_empty() {
-                    splits += west.combi;
-                beams_advanced.push(west);
+                    beams_advanced.push(west);
                 } else {
                     let val = existing.first_mut().unwrap();
-                    val.fuse();
-                    splits += val.combi;
+                    val.fuse(west);
                 }
             }
             if map_bounds.is_in_bounds(&east.coordinates) {
-                let mut existing: Vec<&mut Beam> = beams_advanced.iter_mut().filter(|x| x.coordinates == east.coordinates).collect();
+                let mut existing: Vec<&mut Beam> = beams_advanced
+                    .iter_mut()
+                    .filter(|x| x.coordinates == east.coordinates)
+                    .collect();
                 if existing.is_empty() {
-                    splits += east.combi;
                     beams_advanced.push(east);
                 } else {
                     let val = existing.first_mut().unwrap();
-                    val.fuse();
-                    splits += val.combi;
+                    val.fuse(east);
                 }
             }
         } else {
@@ -142,8 +165,7 @@ fn advance_beams(map: &CharMatrix, beams: Vec<Beam>) -> (Vec<Beam>, usize) {
 mod tests {
     use super::*;
 
-    const TEST_INPUT: &'static str =
-".......S.......
+    const TEST_INPUT: &'static str = ".......S.......
 ...............
 .......^.......
 ...............
