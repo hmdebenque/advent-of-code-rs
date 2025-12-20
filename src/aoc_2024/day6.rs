@@ -1,5 +1,5 @@
 use crate::aoc_2024::common::Direction::{East, North, South, West};
-use crate::aoc_2024::common::{CharMatrix, Coordinates, Direction};
+use crate::aoc_2024::common::{CharMatrix, Coordinates2D, Direction};
 use std::collections::HashSet;
 use std::fmt::Debug;
 use std::str::FromStr;
@@ -14,9 +14,9 @@ pub fn day6(input: &String) -> String {
     visited_locations.len().to_string()
 }
 
-fn get_guard_path(map: &CharMatrix) -> HashSet<Coordinates> {
+fn get_guard_path(map: &CharMatrix) -> HashSet<Coordinates2D> {
     let mut guard = find_guard(&map);
-    let mut visited_locations: HashSet<Coordinates> = HashSet::new();
+    let mut visited_locations: HashSet<Coordinates2D> = HashSet::new();
     let coordinates = guard.location.clone();
     visited_locations.insert(coordinates);
     while map.is_in_bounds(&guard.location) {
@@ -85,7 +85,7 @@ fn is_map_loop(map: &CharMatrix, guard_original: &Guard) -> bool {
     // mutable copy to move her around
     let mut guard: Guard = guard_original.clone();
 
-    let mut visited_locations: HashSet<(Coordinates, Direction)> = HashSet::new();
+    let mut visited_locations: HashSet<(Coordinates2D, Direction)> = HashSet::new();
     visited_locations.insert((guard.location.to_owned(), guard.direction.to_owned()));
     while map.is_in_bounds(&guard.location) {
         let next_step = guard.next_step();
@@ -112,12 +112,12 @@ fn is_map_loop(map: &CharMatrix, guard_original: &Guard) -> bool {
 
 #[derive(Debug, Copy, Clone)]
 struct Guard {
-    location: Coordinates,
+    location: Coordinates2D,
     direction: Direction,
 }
 
 impl Guard {
-    fn new(location: Coordinates, direction: Direction) -> Self {
+    fn new(location: Coordinates2D, direction: Direction) -> Self {
         Guard {
             location,
             direction,
@@ -125,7 +125,7 @@ impl Guard {
     }
 
     /// coordinates in front of the guard
-    fn next_step(&self) -> Coordinates {
+    fn next_step(&self) -> Coordinates2D {
         self.direction.advance(&self.location)
     }
 

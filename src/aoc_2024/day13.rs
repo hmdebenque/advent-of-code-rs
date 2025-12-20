@@ -1,4 +1,4 @@
-use crate::aoc_2024::common::{CharMatrix, Coordinates, Vector};
+use crate::aoc_2024::common::{CharMatrix, Coordinates2D, Vector};
 #[cfg(not(test))]
 use log::info;
 // Use log crate when building application
@@ -34,7 +34,7 @@ fn parse_machines(input: &String) -> Vec<Machine> {
 struct Machine {
     a_button: Vector,
     b_button: Vector,
-    prize_loc: Coordinates,
+    prize_loc: Coordinates2D,
 }
 
 impl FromStr for Machine {
@@ -58,13 +58,13 @@ impl FromStr for Machine {
         Ok(Machine::new(
             vector_a,
             vector_b,
-            Coordinates::new(prize_x, prize_y),
+            Coordinates2D::new(prize_x, prize_y),
         ))
     }
 }
 
 impl Machine {
-    fn new(a_button: Vector, b_button: Vector, prize_loc: Coordinates) -> Machine {
+    fn new(a_button: Vector, b_button: Vector, prize_loc: Coordinates2D) -> Machine {
         Machine {
             a_button,
             b_button,

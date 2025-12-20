@@ -1,4 +1,4 @@
-use crate::aoc_2024::common::{CharMatrix, Coordinates, Direction};
+use crate::aoc_2024::common::{CharMatrix, Coordinates2D, Direction};
 #[cfg(not(test))]
 use log::info;
 // Use log crate when building application
@@ -17,7 +17,7 @@ pub fn day10(input: &String) -> String {
             println!("New exploration starting at: {:?}", x);
             explore(&char_matrix, -1, x)
                 .into_iter()
-                .collect::<HashSet<Coordinates>>()
+                .collect::<HashSet<Coordinates2D>>()
                 .iter()
                 .count()
         })
@@ -39,7 +39,11 @@ pub fn day10_2(input: &String) -> String {
         .to_string()
 }
 
-fn explore(map: &CharMatrix, previous_level: isize, location: &Coordinates) -> Vec<Coordinates> {
+fn explore(
+    map: &CharMatrix,
+    previous_level: isize,
+    location: &Coordinates2D,
+) -> Vec<Coordinates2D> {
     let level_opt = map.get_char_at(location);
     if level_opt.is_err() {
         return vec![];

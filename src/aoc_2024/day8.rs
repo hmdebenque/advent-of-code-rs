@@ -1,4 +1,4 @@
-use crate::aoc_2024::common::{CharMatrix, Coordinates, Rectangle, Vector};
+use crate::aoc_2024::common::{CharMatrix, Coordinates2D, Rectangle, Vector};
 use std::collections::{HashMap, HashSet};
 use std::str::FromStr;
 
@@ -12,7 +12,7 @@ pub fn day8_2(input: &String) -> String {
 
 fn find_antinodes_count(input: &String, include_resonating: bool) -> String {
     let map = CharMatrix::from_str(input).unwrap();
-    let distinct: HashMap<char, Vec<Coordinates>> = map
+    let distinct: HashMap<char, Vec<Coordinates2D>> = map
         .get_all_chars()
         .iter()
         .map(|x| x.to_owned())
@@ -40,11 +40,11 @@ fn find_antinodes_count(input: &String, include_resonating: bool) -> String {
                         .iter()
                         .filter(|x| **x != *coord)
                         .flat_map(|x| get_antinodes(coord, x, &maps_bounds, include_resonating))
-                        .collect::<Vec<Coordinates>>();
+                        .collect::<Vec<Coordinates2D>>();
                     vec1
                 })
                 .filter(|c| map.is_in_bounds(c))
-                .collect::<HashSet<Coordinates>>();
+                .collect::<HashSet<Coordinates2D>>();
             println!("Antinodes for {}: {:?}", char, vec);
             vec
         })
@@ -61,11 +61,11 @@ fn find_antinodes_count(input: &String, include_resonating: bool) -> String {
         .to_string()
 }
 fn get_antinodes(
-    c1: &Coordinates,
-    c2: &Coordinates,
+    c1: &Coordinates2D,
+    c2: &Coordinates2D,
     bounds: &Rectangle,
     include_resonating: bool,
-) -> Vec<Coordinates> {
+) -> Vec<Coordinates2D> {
     if include_resonating {
         get_antinodes_resonating(c1, c2, bounds)
     } else {
@@ -73,7 +73,7 @@ fn get_antinodes(
     }
 }
 
-fn get_antinodes_non_resonating(c1: &Coordinates, c2: &Coordinates) -> Vec<Coordinates> {
+fn get_antinodes_non_resonating(c1: &Coordinates2D, c2: &Coordinates2D) -> Vec<Coordinates2D> {
     let from_c1_to_c2 = Vector::new_from_to(c1, c2);
 
     vec![
@@ -83,10 +83,10 @@ fn get_antinodes_non_resonating(c1: &Coordinates, c2: &Coordinates) -> Vec<Coord
 }
 
 fn get_antinodes_resonating(
-    c1: &Coordinates,
-    c2: &Coordinates,
+    c1: &Coordinates2D,
+    c2: &Coordinates2D,
     bounds: &Rectangle,
-) -> Vec<Coordinates> {
+) -> Vec<Coordinates2D> {
     let from_c1_to_c2 = Vector::new_from_to(c1, c2);
     let from_c2_to_c1 = from_c1_to_c2.reverse();
 
@@ -207,8 +207,8 @@ mod tests {
 
     #[test]
     fn test_get_antinodes() {
-        let c1 = Coordinates::new(2, 3);
-        let c2 = Coordinates::new(4, 5);
+        let c1 = Coordinates2D::new(2, 3);
+        let c2 = Coordinates2D::new(4, 5);
         //0 ......
         //1 #.....
         //2 ......
@@ -222,19 +222,19 @@ mod tests {
         let antinodes = get_antinodes_non_resonating(&c1, &c2);
 
         assert_eq!(antinodes.len(), 2);
-        assert_eq!(antinodes[0], Coordinates::new(0, 1));
-        assert_eq!(antinodes[1], Coordinates::new(6, 7));
+        assert_eq!(antinodes[0], Coordinates2D::new(0, 1));
+        assert_eq!(antinodes[1], Coordinates2D::new(6, 7));
     }
 
     #[test]
     fn test_get_antinodes_a() {
-        let c1 = Coordinates::new(8, 8);
-        let c2 = Coordinates::new(9, 9);
+        let c1 = Coordinates2D::new(8, 8);
+        let c2 = Coordinates2D::new(9, 9);
 
         let antinodes = get_antinodes_non_resonating(&c1, &c2);
 
         assert_eq!(antinodes.len(), 2);
-        assert_eq!(antinodes[0], Coordinates::new(7, 7));
-        assert_eq!(antinodes[1], Coordinates::new(10, 10));
+        assert_eq!(antinodes[0], Coordinates2D::new(7, 7));
+        assert_eq!(antinodes[1], Coordinates2D::new(10, 10));
     }
 }

@@ -1,4 +1,4 @@
-use crate::aoc_2024::common::{CharMatrix, Coordinates, Direction};
+use crate::aoc_2024::common::{CharMatrix, Coordinates2D, Direction};
 use std::str::FromStr;
 use strum::IntoEnumIterator;
 
@@ -29,7 +29,7 @@ pub fn day4_2(input: &String) -> String {
     let mut removed_total = 0;
 
     loop {
-        let removed: Vec<Coordinates> = matrix
+        let removed: Vec<Coordinates2D> = matrix
             .search_chars(&SLOT_FILE_PRESENT_CHAR)
             .iter()
             .map(|x| {

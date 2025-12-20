@@ -1,5 +1,5 @@
 use crate::aoc_2024::common::Direction::{East, South, West};
-use crate::aoc_2024::common::{CharMatrix, Coordinates, Direction};
+use crate::aoc_2024::common::{CharMatrix, Coordinates2D, Direction};
 #[cfg(not(test))]
 use log::info;
 use std::collections::HashSet;
@@ -15,7 +15,7 @@ pub fn day7(input: &String) -> String {
     let map_str = map.print();
     info!("Map:\n{map_str}");
 
-    let mut beams: HashSet<Coordinates> = map.search_chars(&'S').into_iter().collect();
+    let mut beams: HashSet<Coordinates2D> = map.search_chars(&'S').into_iter().collect();
     let mut nb_of_split = 0;
     loop {
         beams = beams
@@ -44,7 +44,7 @@ pub fn day7(input: &String) -> String {
 
 #[derive(Debug)]
 struct Beam {
-    coordinates: Coordinates,
+    coordinates: Coordinates2D,
     combi: usize,
 }
 
@@ -60,7 +60,7 @@ impl Beam {
         self.combi = self.combi + other.combi;
     }
 
-    fn new(coordinates: Coordinates) -> Beam {
+    fn new(coordinates: Coordinates2D) -> Beam {
         Beam {
             coordinates,
             combi: 1,
