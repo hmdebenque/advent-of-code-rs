@@ -1,5 +1,4 @@
 use crate::aoc_2024::common::{CharMatrix, Coordinates2D, Rectangle, Segment};
-use clap::builder::Str;
 #[cfg(not(test))]
 use log::info;
 #[cfg(test)]
@@ -17,7 +16,7 @@ pub fn day9(input: &String) -> String {
 
     print_as_matrix(&tiles);
 
-    let mut rect = build_rect_from_red_tiles(&tiles);
+    let rect = build_rect_from_red_tiles(&tiles);
 
     rect.iter().map(Rectangle::area).max().unwrap().to_string()
 }
@@ -59,10 +58,6 @@ fn print_as_matrix(tiles: &Vec<Coordinates2D>) {
     }
     let matrix_str = matrix.print();
     info!("Matrix:\n{matrix_str}");
-}
-
-fn contains_inside(rect: &Rectangle, tiles: &Vec<Coordinates2D>) -> bool {
-    tiles.iter().any(|t| rect.is_in_bounds_exclusive(t))
 }
 
 fn build_rect_from_red_tiles(tiles: &Vec<Coordinates2D>) -> Vec<Rectangle> {

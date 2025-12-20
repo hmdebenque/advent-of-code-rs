@@ -169,13 +169,6 @@ impl Rectangle {
             && location.y < (self.location.y + self.height as isize)
     }
 
-    pub fn is_in_bounds_exclusive(&self, location: &Coordinates2D) -> bool {
-        location.x > self.location.x
-            && location.y > self.location.y
-            && location.x < (self.location.x + self.width as isize)
-            && location.y < (self.location.y + self.height as isize)
-    }
-
     pub fn area(&self) -> usize {
         self.width * self.height
     }
@@ -302,7 +295,7 @@ impl CharMatrix {
 
     pub fn ensure_y(&mut self, height: usize) {
         if self.matrix.len() < height {
-            for i in self.matrix.len()..height {
+            for _ in self.matrix.len()..height {
                 self.matrix.push(Vec::new());
             }
         }
@@ -311,7 +304,7 @@ impl CharMatrix {
     pub fn ensure_x(&mut self, width: usize) {
         for row in self.matrix.iter_mut() {
             if row.len() < width {
-                for i in row.len()..width {
+                for _ in row.len()..width {
                     row.push('.');
                 }
             }
